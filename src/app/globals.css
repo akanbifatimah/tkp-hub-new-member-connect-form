@@ -1,26 +1,155 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Brand palette from Figma "TKP Hub" (file tftEO6O0fcSeIWzEZzHcv6) */
+@theme {
+  --color-ink: #210e0a;
+  --color-maroon-950: #210e0a;
+  --color-maroon-900: #2f0d0b;
+  --color-maroon-800: #4a0b0e;
+  --color-maroon-700: #6e0d12;
+  --color-maroon-600: #8c1a20;
+  --color-maroon-500: #92464a;
+  --color-maroon-100: #f4e3e1;
+  --color-cream-50: #fffdf8;
+  --color-cream-100: #faf7ef;
+  --color-cream-200: #fbf2e8;
+  --color-cream-300: #f1e4cf;
+  --color-gold-300: #ecd690;
+  --color-gold-400: #e2c35f;
+  --color-gold-500: #d4af37;
+  --color-gold-600: #b08d22;
+  --color-navy-900: #022448;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --shadow-card: 0 8px 24px rgb(110 13 18 / 0.08), 0 30px 60px -20px rgb(33 14 10 / 0.35);
+  --shadow-glow: 0 0 0 1px rgb(212 175 55 / 0.35), 0 10px 40px -8px rgb(212 175 55 / 0.55);
+
+  --animate-shimmer: shimmer 3.2s linear infinite;
+  --animate-float-slow: float-slow 9s ease-in-out infinite;
+  --animate-bounce-soft: bounce-soft 2.2s ease-in-out infinite;
+
+  @keyframes shimmer {
+    to { background-position: 200% center; }
+  }
+  @keyframes float-slow {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -18px, 0); }
+  }
+  @keyframes bounce-soft {
+    0%, 100% { transform: translateY(0); opacity: 0.6; }
+    50% { transform: translateY(8px); opacity: 1; }
   }
 }
 
+:root {
+  color-scheme: light;
+}
+
+html {
+  background: var(--color-maroon-950);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-maroon-950);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--color-gold-400);
+  color: var(--color-maroon-950);
+}
+
+/* Gold gradient text with a slow shimmer */
+.text-gold-shimmer {
+  background: linear-gradient(
+    100deg,
+    var(--color-gold-600) 0%,
+    var(--color-gold-300) 25%,
+    #fff6d8 40%,
+    var(--color-gold-400) 55%,
+    var(--color-gold-600) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: var(--animate-shimmer);
+}
+
+/* Warm, layered backdrop used behind the form & as the no-WebGL fallback */
+.bg-sanctuary {
+  background:
+    radial-gradient(60% 50% at 50% 0%, rgb(212 175 55 / 0.16), transparent 70%),
+    radial-gradient(45% 40% at 85% 30%, rgb(140 26 32 / 0.55), transparent 70%),
+    radial-gradient(50% 45% at 10% 70%, rgb(110 13 18 / 0.6), transparent 70%),
+    linear-gradient(180deg, #2f0d0b 0%, #210e0a 55%, #170906 100%);
+}
+
+/* Subtle film grain for depth (pure CSS, no image request) */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Tailwind v4 resets buttons to cursor: default; restore the pointer on every
+   clickable element. In @layer base so utilities like disabled:cursor-wait win. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="radio"],
+  [role="tab"],
+  a[href],
+  summary,
+  select:not(:disabled),
+  label:has(input:not(:disabled)),
+  input:is([type="checkbox"], [type="radio"], [type="submit"], [type="button"], [type="reset"], [type="file"]):not(:disabled) {
+    cursor: pointer;
+  }
+  :is(button, select, input):disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
+/* Accessible focus ring */
+:where(a, button, input, select, textarea, [role="radio"]):focus-visible {
+  outline: 2px solid var(--color-gold-500);
+  outline-offset: 2px;
+}
+
+/* Native select arrow, brand coloured */
+.select-arrow {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%236e0d12' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.25rem;
+}
+
+/* Date input calendar icon tint */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.65;
+  filter: invert(12%) sepia(60%) saturate(4000%) hue-rotate(345deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
