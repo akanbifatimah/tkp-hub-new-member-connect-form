@@ -96,7 +96,7 @@ export function Hero() {
             const el = document.getElementById("connect");
             if (el) smoothScrollTo(el, -16);
           }}
-          className="hidden rounded-full border border-gold-400/40 bg-white/5 px-5 py-2.5 text-[14px] font-bold text-gold-300 backdrop-blur transition hover:border-gold-300 hover:bg-white/10 sm:inline-flex"
+          className="hidden rounded-full border border-gold-400 bg-cream-100 px-5 py-2.5 text-[14px] font-bold text-maroon-900 shadow-[0_6px_20px_-6px_rgb(0_0_0/0.5)] transition hover:-translate-y-0.5 hover:bg-white sm:inline-flex"
         >
           I&apos;m new here
         </a>
